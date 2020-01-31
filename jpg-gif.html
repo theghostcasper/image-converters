@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>JPG to GIF Converter</title>
+  </head>
+  <body>
+    <main class="container pt-4">
+      <h2 class="text-center">JPG to GIF Converter</h2>
+      <div class="row center-align center">
+        <div class="col s12 m8">
+          <div class="card-panel darken-1">
+            <ol class="left-align">
+              <li class="done-drag">Drag and drop a JPG image in the box below</li>
+              <li class="done-convert">Press convert to convert it into GIF</li>
+            </ol>
+            <div class="alert center-align red-text">Image is not a JPG</div>
+            <div class="image-box row">
+              <div class="thumb col s4">
+                <img class="thumb-img" src="" />
+              </div>
+              <label class="dragUpload col s12" for="file">
+                <img class="dragUpload--image" src="./image/Upload-PNG-Images.png" />
+                <strong class="black-text">Drag JPG here</strong>
+                <input type="file" accept="image/jpeg" id="file" name="file[]" />
+              </label>
+              <a class="reset waves-effect waves-light btn lightblue">Reset</a>
+              <a class="convert waves-effect waves-light btn grey disabled"
+                ><i class="material-icons right">cloud_download</i> Convert</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="./js/script.js"></script>
+
+    <script>
+      initImageConversion("jpg", "gif", "jpeg");
+    </script>
+  </body>
+</html>
