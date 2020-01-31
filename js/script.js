@@ -1,36 +1,59 @@
-function convert(from, to, extra) {
-  let droppedFile = null;
+"use strict";
+
+var droppedFile = null; // Converts image to canvas; returns new canvas element
+
+function convertImageToCanvas(imageSrc, callback) {
+  var image = new Image();
+  image.src = imageSrc;
+
+  image.onload = function() {
+    var canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    canvas.getContext("2d").drawImage(image, 0, 0);
+    callback(canvas);
+  };
+} // Converts canvas to an image
+
+function convertCanvasToLink(canvas, to) {
+  var link = document.createElement("a");
+  link.href = canvas.toDataURL("image/" + to);
+  link.download = "output" + new Date().toString().slice(0, 24) + "." + to;
+  return link;
+}
+
+function addEventListeners() {
   /*DRAG AND DROP EVENT LISTENERS */
-  ["drag", "dragstart", "dragend", "dragover", "dragenter", "dragleave", "drop"].forEach(e => {
+  ["drag", "dragstart", "dragend", "dragover", "dragenter", "dragleave", "drop"].forEach(function(e) {
     document.querySelector(".dragUpload").addEventListener(e, function(evt) {
       evt.preventDefault();
       evt.stopPropagation();
     });
   });
-
-  ["dragover", "dragenter"].forEach(e => {
+  ["dragover", "dragenter"].forEach(function(e) {
     document.querySelector(".dragUpload").addEventListener(e, function(evt) {
       document.querySelector(".dragUpload").classList.add("dragged");
     });
   });
-
-  ["dragleave", "dragend", "drop"].forEach(e => {
+  ["dragleave", "dragend", "drop"].forEach(function(e) {
     document.querySelector(".dragUpload").addEventListener(e, function(evt) {
       document.querySelector(".dragUpload").classList.remove("dragged");
     });
   });
+}
 
+function initImageConversion(from, to, extra) {
+  addEventListeners();
   document.querySelector(".dragUpload").addEventListener("drop", function(evt) {
     droppedFile = evt.dataTransfer.files[0];
     handleFileSelect(null, droppedFile);
   });
-
   /* IF USER DIDN't Use Drag and Drop functionality and used the click instead*/
+
   document.getElementById("file").addEventListener("change", handleFileSelect, false);
-
   /* FILE READER API */
-
   // Check for the various File API support.
+
   if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
     alert("The File APIs are not fully supported in this browser, Please update your browser or use a different one.");
   }
@@ -38,8 +61,8 @@ function convert(from, to, extra) {
   function handleFileSelect(evt, file) {
     var output;
     file = file || evt.target.files[0];
-    from = extra || from;
-    if (!file.type.match("image/" + from)) {
+
+    if (!file.type.match("image/" + (extra || from))) {
       document.querySelector(".alert").style.display = "block";
       document.querySelector(".done-convert").classList.remove("green-text");
       document.querySelector(".done-drag").classList.remove("green-text");
@@ -60,6 +83,7 @@ function convert(from, to, extra) {
     }
 
     var reader = new FileReader();
+
     reader.onload = (function() {
       return function(e) {
         // Render thumbnail.
@@ -78,34 +102,13 @@ function convert(from, to, extra) {
 
   document.querySelector(".convert").addEventListener("click", function() {
     /* Convert image */
-    let canvas = convertImageToCanvas(document.querySelector(".thumb-img").src, function(canvas) {
-      let link = convertCanvasToImage(canvas);
+    var canvas = convertImageToCanvas(document.querySelector(".thumb-img").src, function(canvas) {
+      var link = convertCanvasToLink(canvas, to);
       link.click();
       document.querySelector(".done-convert").classList.add("green-text");
     });
   });
-
   document.querySelector(".reset").addEventListener("click", function() {
     location.reload();
   });
-  // Converts image to canvas; returns new canvas element
-  function convertImageToCanvas(imageSrc, callback) {
-    var image = new Image();
-    image.src = imageSrc;
-    image.onload = function() {
-      var canvas = document.createElement("canvas");
-      canvas.width = image.width;
-      canvas.height = image.height;
-      canvas.getContext("2d").drawImage(image, 0, 0);
-      callback(canvas);
-    };
-  }
-
-  // Converts canvas to an image
-  function convertCanvasToImage(canvas) {
-    var link = document.createElement("a");
-    link.href = canvas.toDataURL("image/" + to);
-    link.download = "output" + new Date().toString().slice(0, 24) + "." + to;
-    return link;
-  }
 }
