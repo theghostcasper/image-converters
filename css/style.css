@@ -30,6 +30,13 @@ body {
   vertical-align: middle;
   opacity: 0.6;
 }
+
+@media screen and (max-width: 765px) {
+  .dragUpload--image {
+    width: 80px;
+  }
+}
+
 .dragUpload input {
   position: absolute;
   top: 50%;
