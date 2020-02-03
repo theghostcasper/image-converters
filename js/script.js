@@ -1,11 +1,13 @@
 "use strict";
+
 if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
   alert("The File APIs are not fully supported in this browser, Please update your browser or use a different one.");
 }
 
-var droppedFile = null; // Converts image to canvas; returns new canvas element
-var imageType;
-var from, to, extra;
+var droppedFile, imageType;
+var convertFromType = "image/*";
+
+/* Converts image to canvas; returns new canvas element */
 function convertImageToCanvas(imageSrc, callback) {
   var image = new Image();
   image.src = imageSrc;
@@ -17,23 +19,27 @@ function convertImageToCanvas(imageSrc, callback) {
     canvas.getContext("2d").drawImage(image, 0, 0);
     callback(canvas);
   };
-} // Converts canvas to an image
+}
 
-function convertCanvasToLink(canvas, to) {
+/* Converts canvas to an a downloadable link (Deprecated) */
+function convertCanvasToLink(canvas, extension) {
   var link = document.createElement("a");
-  link.href = canvas.toDataURL("image/" + to);
-  link.download = "output" + new Date().toString().slice(0, 24) + "." + to;
+  link.href = canvas.toDataURL("image/" + extension);
+  link.download = "output" + new Date().toString().slice(0, 24) + "." + extension;
   return link;
 }
 
-function downloadCanvasImageAs(canvas, to) {
+/* Saves the canvas Image with a file extension */
+function downloadCanvasImageAs(canvas, extension) {
   canvas.toBlob(function(blob) {
-    saveAs(blob, "output" + new Date().toString().slice(0, 24) + "." + to);
+    saveAs(blob, "output" + new Date().toString().slice(0, 24) + "." + extension);
   });
 }
 
+/* Converts canvas image to black and white */
 function greyScale(canvas, w, h) {
   var imgPixels = canvas.getContext("2d").getImageData(0, 0, w, h);
+
   for (var y = 0; y < imgPixels.height; y++) {
     for (var x = 0; x < imgPixels.width; x++) {
       var i = y * 4 * imgPixels.width + x * 4;
@@ -43,15 +49,17 @@ function greyScale(canvas, w, h) {
       imgPixels.data[i + 2] = avg;
     }
   }
+
   canvas.getContext("2d").putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
   return canvas.toDataURL(imageType);
 }
 
-function handleFileSelect(evt, file) {
+/* Function to handle the dropped file's data*/
+function handleDroppedFile(evt, file) {
   var output;
   file = file || evt.target.files[0];
 
-  if (!file.type.match("image/*")) {
+  if (!file.type.match(convertFromType)) {
     document.querySelector(".alert").style.display = "block";
     document.querySelector(".done-convert").classList.remove("green-text");
     document.querySelector(".done-drag").classList.remove("green-text");
@@ -110,14 +118,14 @@ function addEventListeners() {
   });
 }
 
+/* Image to greyscale handler */
 function convertToGreyScale() {
   addEventListeners();
   document.querySelector(".dragUpload").addEventListener("drop", function(evt) {
     droppedFile = evt.dataTransfer.files[0];
-    handleFileSelect(null, droppedFile);
+    handleDroppedFile(null, droppedFile);
   });
-  document.getElementById("file").addEventListener("change", handleFileSelect, false);
-
+  document.getElementById("file").addEventListener("change", handleDroppedFile, false);
   document.querySelector(".convert").addEventListener("click", function() {
     /* Convert image */
     var canvas = convertImageToCanvas(document.querySelector(".thumb-img").src, function(canvas) {
@@ -126,31 +134,28 @@ function convertToGreyScale() {
       document.querySelector(".done-convert").classList.add("green-text");
     });
   });
-
   document.querySelector(".reset").addEventListener("click", function() {
     location.reload();
   });
 }
 
+/* Image type conversion handler*/
 function initImageConversion(fromExt, toExt, extraParams) {
-  from = fromExt;
-  to = toExt;
-  extra = extraParams;
+  convertFromType = "image/" + (extraParams || fromExt);
   addEventListeners();
   document.querySelector(".dragUpload").addEventListener("drop", function(evt) {
     droppedFile = evt.dataTransfer.files[0];
-    handleFileSelect(null, droppedFile);
+    handleDroppedFile(null, droppedFile);
   });
-  /* IF USER DIDN't Use Drag and Drop functionality and used the click instead*/
 
-  document.getElementById("file").addEventListener("change", handleFileSelect, false);
+  /* IF USER DIDN't Use Drag and Drop functionality and used the click instead*/
+  document.getElementById("file").addEventListener("change", handleDroppedFile, false);
   /* FILE READER API */
   // Check for the various File API support.
-
   document.querySelector(".convert").addEventListener("click", function() {
     /* Convert image */
     var canvas = convertImageToCanvas(document.querySelector(".thumb-img").src, function(canvas) {
-      downloadCanvasImageAs(canvas, to);
+      downloadCanvasImageAs(canvas, toExt);
       document.querySelector(".done-convert").classList.add("green-text");
     });
   });
