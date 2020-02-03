@@ -33,13 +33,14 @@ function downloadCanvasImageAs(canvas, to) {
 }
 
 function greyScale(canvas, w, h) {
-  var imgPixels = canvas.getContext("2d").getImageData(0,0,w,h);
-  for(var y = 0; y < imgPixels.height; y++){
-    for(var x = 0; x < imgPixels.width; x++){
-      var i = (y * 4) * imgPixels.width + x * 4;
+  var imgPixels = canvas.getContext("2d").getImageData(0, 0, w, h);
+  for (var y = 0; y < imgPixels.height; y++) {
+    for (var x = 0; x < imgPixels.width; x++) {
+      var i = y * 4 * imgPixels.width + x * 4;
       var avg = (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) / 3;
-      imgPixels.data[i] = avg; 
-      imgPixels.data[i + 1] = avg; imgPixels.data[i + 2] = avg;
+      imgPixels.data[i] = avg;
+      imgPixels.data[i + 1] = avg;
+      imgPixels.data[i + 2] = avg;
     }
   }
   canvas.getContext("2d").putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
@@ -85,9 +86,9 @@ function handleFileSelect(evt, file) {
     };
   })(file);
 
-    reader.readAsDataURL(file);
-    document.getElementById("file").value = null;
-  }
+  reader.readAsDataURL(file);
+  document.getElementById("file").value = null;
+}
 
 function addEventListeners() {
   /*DRAG AND DROP EVENT LISTENERS */
@@ -121,11 +122,11 @@ function convertToGreyScale() {
     /* Convert image */
     var canvas = convertImageToCanvas(document.querySelector(".thumb-img").src, function(canvas) {
       greyScale(canvas, canvas.width, canvas.height);
-      downloadCanvasImageAs(canvas, imageType.split('/')[1])
+      downloadCanvasImageAs(canvas, imageType.split("/")[1]);
       document.querySelector(".done-convert").classList.add("green-text");
     });
   });
-  
+
   document.querySelector(".reset").addEventListener("click", function() {
     location.reload();
   });
@@ -145,8 +146,6 @@ function initImageConversion(fromExt, toExt, extraParams) {
   document.getElementById("file").addEventListener("change", handleFileSelect, false);
   /* FILE READER API */
   // Check for the various File API support.
-
-
 
   document.querySelector(".convert").addEventListener("click", function() {
     /* Convert image */
