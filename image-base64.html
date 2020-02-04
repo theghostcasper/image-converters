@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Image to Base64 Converter</title>
+  </head>
+  <body>
+    <main class="container pt-4">
+      <h2 class="text-center">Image to Base64 Converter</h2>
+      <div class="row center-align center">
+        <div class="col s12 m8">
+          <div class="card-panel darken-1">
+            <ol class="left-align">
+              <li class="done-drag">Drag and drop an image in the box below</li>
+              <li class="done-convert">Press convert to convert it into Base64</li>
+            </ol>
+            <div class="alert center-align red-text">File is not an Image</div>
+            <div class="image-box row">
+              <div class="thumb col s4">
+                <img class="thumb-img" src="" />
+              </div>
+              <label class="dragUpload col s12" for="file">
+                <img class="dragUpload--image" src="./image/Upload-PNG-Images.png" />
+                <strong class="black-text">Drag GIF here</strong>
+                <input type="file" accept="image/*" id="file" name="file[]" />
+              </label>
+              <a class="reset waves-effect waves-light btn light-blue">Reset</a>
+              <a class="convert waves-effect waves-light btn grey disabled"
+                ><i class="material-icons right">cloud_download</i> Convert</a
+              >
+            </div>
+            <div class="row left-align">
+              <div>
+                <span class="valign-wrapper">
+                  <h5>Base64 code result</h5>
+                  <button class="copy waves-effect btn-flat light-blue-text bordered margin-left-auto tooltipped" data-tooltip="copied!" data-copy="#base64">Copy</button>
+                </span>
+                <textarea id="base64" disabled class="result p-2"></textarea>
+              </div>
+              <div>
+                <span class="valign-wrapper">
+                  <h5>HTML Code</h5>
+                  <button class="copy waves-effect btn-flat light-blue-text bordered margin-left-auto tooltipped" data-tooltip="copied!" data-copy="#htmlcode">Copy</button>
+                </span>
+                <textarea id="htmlcode" disabled class="result p-2"></textarea>
+              </div>
+              <div>
+                <span class="valign-wrapper">
+                  <h5>CSS Code</h5>
+                  <button class="copy waves-effect btn-flat light-blue-text bordered margin-left-auto tooltipped" data-tooltip="copied!" data-copy="#csscode">Copy</button>
+                </span>
+                <textarea id="csscode" disabled class="result p-2"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js"></script>
+
+    <script src="./js/script.js"></script>
+    <script>
+      initBase64Conversion();
+    </script>
+  </body>
+</html>

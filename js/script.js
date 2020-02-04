@@ -163,3 +163,44 @@ function initImageConversion(fromExt, toExt, extraParams) {
     location.reload();
   });
 }
+
+function initBase64Conversion() {
+  addEventListeners();
+  document.querySelector(".dragUpload").addEventListener("drop", function(evt) {
+    droppedFile = evt.dataTransfer.files[0];
+    handleDroppedFile(null, droppedFile);
+  });
+  document.getElementById("file").addEventListener("change", handleDroppedFile, false);
+  document.querySelector(".convert").addEventListener("click", function() {
+    let imageData = document.querySelector(".thumb-img").src;
+    document.getElementById("base64").value = imageData;
+    document.getElementById("htmlcode").value = `<img src="${imageData}" alt="">`;
+    document.getElementById("csscode").value = `background-image: url(${imageData});`;
+    document.querySelector(".done-convert").classList.add("green-text");
+  });
+  document.querySelector(".reset").addEventListener("click", function() {
+   location.reload(); 
+  });
+
+  document.querySelectorAll(".copy").forEach(btn => {
+    btn.addEventListener("click", function(evt) {
+      let textArea = document.querySelector(evt.target.dataset.copy);
+      let text = textArea.value;
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      /* Show a tooltip */
+      M.Tooltip.init(evt.target, {
+        exitDelay: 2000,
+        position: "left"
+      });
+      M.Tooltip.getInstance(evt.target).open();
+      setTimeout(function() {
+        M.Tooltip.getInstance(evt.target).destroy();
+      }, 2000) 
+    }) 
+  })
+}

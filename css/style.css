@@ -60,3 +60,20 @@ body {
   max-width: 100%;
 }
 
+.result {
+  min-width: 100%;
+  max-width: 100%;
+  width: 100%;
+  min-height: 100px;
+  height: 100px;
+}
+.bordered {
+  border:1px solid lightblue;
+  margin:5px;
+}
+.margin-left-auto {
+  margin-left: auto;
+} 
+.p-2 {
+  padding:10px;
+}
