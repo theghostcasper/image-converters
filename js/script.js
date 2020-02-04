@@ -152,6 +152,7 @@ function convertToGreyScale() {
       function(canvas) {
         greyScale(canvas, canvas.width, canvas.height);
         downloadCanvasImageAs(canvas, imageType.split("/")[1]);
+        document.querySelector(".thumb-img").src = canvas.toDataURL(imageType);
         document.querySelector(".done-convert").classList.add("green-text");
       }
     );
